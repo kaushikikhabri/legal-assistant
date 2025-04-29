@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lawyer Finder</title>
+  <link rel="stylesheet" href="lawyer.css" />
+  <style>
+    /* You can copy your provided CSS here or link externally */
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Find a Lawyer</h1>
+
+    <!-- Search Bar -->
+    <div class="form-group">
+      <input type="text" id="searchInput" placeholder="Search lawyers by name or specialization..." />
+    </div>
+
+    <!-- Case Details Form -->
+    <form id="caseForm">
+      <h2>Enter Case Details</h2>
+
+      <div class="form-group">
+        <label for="caseType">Case Type:</label>
+        <select id="caseType" required>
+          <option value="">Select</option>
+          <option value="Criminal">Criminal</option>
+          <option value="Civil">Civil</option>
+          <option value="Corporate">Corporate</option>
+          <option value="Family">Family</option>
+        </select>
+      </div>
+
+
+      <button type="submit" class="btn-primary">Search Lawyers</button>
+    </form>
+
+    <!-- Lawyer Results Section -->
+    <div class="results" id="lawyerResults">
+      <h2>Available Lawyers</h2>
+      <div class="lawyer-card" data-name="Anita Sharma" data-specialization="Criminal,Family">
+        <strong>Name:</strong> Anita Sharma<br/>
+        <strong>Stage:</strong> High Court<br/>
+        <strong>Specialization:</strong> Criminal, Family<br/>
+        <strong>Experience:</strong> 15 years (Senior)
+      </div><br/>
+      <div class="lawyer-card" data-name="Rohan Mehra" data-specialization="Corporate,Civil">
+        <strong>Name:</strong> Rohan Mehra<br/>
+        <strong>Stage:</strong> Supreme Court<br/>
+        <strong>Specialization:</strong> Corporate, Civil<br/>
+        <strong>Experience:</strong> 8 years (Mid-Level)
+      </div><br/>
+      <div class="lawyer-card" data-name="Sanya Jain" data-specialization="Family">
+        <strong>Name:</strong> Sanya Jain<br/>
+        <strong>Stage:</strong> District Court<br/>
+        <strong>Specialization:</strong> Family<br/>
+        <strong>Experience:</strong> 3 years (Junior)
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const lawyerCards = document.querySelectorAll('.lawyer-card');
+
+    searchInput.addEventListener('input', function () {
+      const query = this.value.toLowerCase();
+      lawyerCards.forEach(card => {
+        const name = card.getAttribute('data-name').toLowerCase();
+        const specialization = card.getAttribute('data-specialization').toLowerCase();
+        card.style.display = name.includes(query) || specialization.includes(query) ? 'block' : 'none';
+      });
+    });
+
+    // Case form filtering can be enhanced here
+    document.getElementById('caseForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Filtered based on dropdowns. (Connect to backend or logic here)');
+    });
+  </script>
+
+</body>
+</html>
