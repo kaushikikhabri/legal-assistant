@@ -33,15 +33,15 @@ function sendMessage() {
   if (articleId === "") return;
 
   // Send message to the chat
-  addMessage("user", `Get Article ${articleId}`);
+  addMessage("user", `${articleId}`);
 
   // Call Flask backend
-  fetch("http://localhost:5000/query_article", {
+  fetch("http://localhost:5000/query_question", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ article_id: articleId }),
+    body: JSON.stringify({ question: articleId }), // was article_id
   })
     .then((response) => response.json())
     .then((data) => {

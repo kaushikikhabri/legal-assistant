@@ -5,23 +5,25 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/query_article', methods=['POST'])
-def query_article():
+@app.route('/query_question', methods=['POST'])
+def query_question():
     data = request.get_json()
-    article_id = data.get('article_id')
+    user_question = data.get('question')
 
-    # Call Prolog to get the article based on ID
     try:
-        result = run_prolog_query(article_id)
+        result = run_prolog_query(user_question)
         return jsonify({'result': result}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-def run_prolog_query(article_id):
-    # Ensure the article ID is wrapped in single quotes to be a valid Prolog atom
-    query = f"query_article('{article_id}')"
+
+def run_prolog_query(user_question):
+    # Escape quotes
+    escaped_question = user_question.replace('"', '\\"')
+    query = f'question("{escaped_question}", Answer), write(Answer)'
+    
     process = subprocess.Popen(
-        ['C:/Program Files/swipl/bin/swipl.exe', '-s', 'constitution.pl', '-g', query, '-t', 'halt'],
+        ['C:/Program Files/swipl/bin/swipl.exe', '-s', 'legal_qa.pl', '-g', query, '-t', 'halt'],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE
     )
@@ -31,6 +33,7 @@ def run_prolog_query(article_id):
         raise Exception(f"Error executing Prolog query: {error.decode()}")
 
     return output.decode().strip()
+
 
 
 
