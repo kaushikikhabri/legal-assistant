@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crime Analysis</title>
+    <link rel="stylesheet" href="ipc-style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Crime Analysis Form</h1>
+        <form id="crimeForm">
+            <!-- Crime Description -->
+            <div class="form-group">
+                <label for="crime_description">Crime Description:</label>
+                <textarea name="crime_description" id="crime_description" class="form-control" rows="5" placeholder="Describe the crime in detail" required></textarea>
+            </div>
+            
+            <!-- Weapon Used -->
+            <div class="form-group">
+                <label for="weapon">Weapon Used?</label>
+                <input type="checkbox" name="weapon" id="weapon">
+            </div>
+
+            <!-- Weapon Type (if weapon is used) -->
+            <div class="form-group" id="weapon_type_group" style="display: none;">
+                <label for="weapon_type">Weapon Type:</label>
+                <select name="weapon_type" id="weapon_type" class="form-control">
+                    <option value="knife">Knife</option>
+                    <option value="gun">Gun</option>
+                    <option value="blunt">Blunt Object</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <!-- Victim Status -->
+            <div class="form-group">
+                <label>Victim Status:</label><br>
+                <input type="radio" name="victim_status" value="dead"> Dead
+                <input type="radio" name="victim_status" value="injured"> Injured
+                <input type="radio" name="victim_status" value="unharmed"> Unharmed
+            </div>
+
+            <!-- Crime Type -->
+            <div class="form-group">
+                <label>Crime Type:</label><br>
+                <input type="checkbox" name="crime_type" value="murder"> Murder<br>
+                <input type="checkbox" name="crime_type" value="theft"> Theft<br>
+                <input type="checkbox" name="crime_type" value="assault"> Assault<br>
+                <input type="checkbox" name="crime_type" value="rape"> Rape<br>
+                <input type="checkbox" name="crime_type" value="robbery"> Robbery<br>
+            </div>
+
+            <!-- Additional Details -->
+            <div class="form-group">
+                <label for="additional_details">Additional Details:</label>
+                <textarea name="additional_details" id="additional_details" class="form-control" rows="3" placeholder="Provide any additional information"></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn btn-primary">
+            </div>
+        </form>
+
+        {% if ipc_results %}
+        <div class="results">
+            <h2>IPC Classification Results</h2>
+            <pre>{{ ipc_results }}</pre>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        document.getElementById('weapon').addEventListener('change', function () {
+            var weaponTypeGroup = document.getElementById('weapon_type_group');
+            weaponTypeGroup.style.display = this.checked ? 'block' : 'none';
+        });
+        
+        document.getElementById('crimeForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent form from submitting the normal way
+        
+            const formData = new FormData(this);
+            const data = {};
+            formData.forEach((value, key) => {
+                if (data[key]) {
+                    // if multiple checkboxes (crime_type)
+                    if (Array.isArray(data[key])) {
+                        data[key].push(value);
+                    } else {
+                        data[key] = [data[key], value];
+                    }
+                } else {
+                    data[key] = value;
+                }
+            });
+        
+            // Checkboxes like 'weapon' might not be included if not checked
+            if (!formData.has('weapon')) {
+                data['weapon'] = 'off';
+            }
+        
+            fetch("http://localhost:5000/submit", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.text())  // If Flask renders HTML as response
+            .then(html => {
+                document.open();
+                document.write(html);  // Replace with updated page (e.g., showing results)
+                document.close();
+            })
+            .catch(error => {
+                console.error("Error submitting form:", error);
+            });
+        });
+        </script>
+        
+</body>
+</html>
+  
