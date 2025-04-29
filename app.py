@@ -18,7 +18,8 @@ def query_article():
         return jsonify({'error': str(e)}), 500
 
 def run_prolog_query(article_id):
-    query = f"query_article({article_id})"
+    # Ensure the article ID is wrapped in single quotes to be a valid Prolog atom
+    query = f"query_article('{article_id}')"
     process = subprocess.Popen(
         ['C:/Program Files/swipl/bin/swipl.exe', '-s', 'constitution.pl', '-g', query, '-t', 'halt'],
         stdout=subprocess.PIPE,
@@ -26,10 +27,11 @@ def run_prolog_query(article_id):
     )
     output, error = process.communicate()
 
-    if error:
+    if error and error.strip():
         raise Exception(f"Error executing Prolog query: {error.decode()}")
 
     return output.decode().strip()
+
 
 
 if __name__ == '__main__':
