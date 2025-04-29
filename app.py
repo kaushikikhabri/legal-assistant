@@ -1,11 +1,10 @@
+import ast
 import re
 import string
 import subprocess
 from difflib import get_close_matches
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-import shutil
-print("SWI-Prolog path:", shutil.which("swipl"))
 
 app = Flask(__name__)
 CORS(app)
@@ -19,16 +18,15 @@ CORS(app)
 # -----------------------------
 @app.route('/submit', methods=['POST'])
 def submit():
-    data = request.get_json()  # Receiving JSON from the frontend
-    print("Received data:", data)  # Print to console
-    app.logger.info("Received data: %s", data)  # Log to Flask console
+    data = request.get_json()
+    print("Received data:", data)
+    app.logger.info("Received data: %s", data)
 
-    # Extract individual values safely
     crime_description = data.get('crime_description', '')
     weapon_used = 'Yes' if data.get('weapon') == 'on' else 'No'
     weapon_type = data.get('weapon_type') if weapon_used == 'Yes' else None
     victim_status = data.get('victim_status', '')
-    crime_type = data.get('crime_type', [])  # Might be a list
+    crime_type = data.get('crime_type', [])
     additional_details = data.get('additional_details', '')
 
     ipc_results = call_prolog(crime_description, weapon_used, weapon_type, victim_status, crime_type)
@@ -36,9 +34,6 @@ def submit():
 
     return render_template('ipc.html', ipc_results=ipc_results)
 
-# -----------------------------
-# Function: Call Prolog for Crime Classification
-# -----------------------------
 def call_prolog(crime_description, weapon_used, weapon_type, victim_status, crime_types):
     prolog_command = [
         'C:/Program Files/swipl/bin/swipl.exe', '-s', 'crime_analysis.pl',
@@ -53,9 +48,8 @@ def call_prolog(crime_description, weapon_used, weapon_type, victim_status, crim
     except subprocess.CalledProcessError as e:
         return f"Final Analysis: {e.output.decode()}"
 
-
 # -----------------------------
-# Smart Legal Assistant Logic
+# Route 3: Smart Legal Assistant
 # -----------------------------
 def load_qa_pairs():
     qa_pairs = []
@@ -102,10 +96,6 @@ def run_smart_query(user_question):
 
     return "Sorry, I couldn't find a relevant answer. Try rephrasing your question."
 
-
-# -----------------------------
-# Route 3: API for Smart Q&A Chatbot
-# -----------------------------
 @app.route('/query_question', methods=['POST'])
 def query_question():
     data = request.get_json()
@@ -116,6 +106,40 @@ def query_question():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+# -----------------------------
+# Route 4: Lawyer Matching by Case Type
+# -----------------------------
+@app.route('/get_lawyers', methods=['POST'])
+def get_lawyers():
+    try:
+        data = request.get_json()
+        case_type = data.get('case_type', '').lower()
+
+        # Update the Prolog command to only retrieve the lawyer's name
+        prolog_command = [
+            'C:/Program Files/swipl/bin/swipl.exe', '-s', 'lawyer.pl',
+            '-g', f"findall(Name, (lawyer(Name, Specs, Level, Years), member({case_type}, Specs)), Result), write(Result)",
+            '-t', 'halt'
+        ]
+
+        result = subprocess.check_output(prolog_command, stderr=subprocess.PIPE).decode().strip()
+        print("Raw Prolog output:", result)
+
+        # Step 1: Clean up the output to extract just the lawyer names
+        # Replace the Prolog output with only the names
+        result = result.replace('lawyer(', '').replace(')', '').replace('[', '').replace(']', '')
+
+        # Step 2: Extract the lawyer names from the Prolog list
+        lawyer_names = result.split(',')
+        lawyer_names = [name.strip() for name in lawyer_names]  # Clean up any extra spaces
+
+        # Step 3: Return the names as a JSON response
+        return jsonify({'matched_lawyers': lawyer_names}), 200
+
+    except subprocess.CalledProcessError as e:
+        return jsonify({'error': e.output.decode()}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # -----------------------------
 # Run Flask App

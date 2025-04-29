@@ -4,81 +4,223 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lawyer Finder</title>
-  <link rel="stylesheet" href="lawyer.css" />
   <style>
-    /* You can copy your provided CSS here or link externally */
+    /* Styling for the container */
+    .lawyer-container {
+      max-width: 900px;
+      margin: auto;
+      padding: 30px;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      text-align: center;
+      color: #007BFF;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .btn-primary {
+      background-color: #007BFF;
+      color: white;
+      padding: 14px;
+      font-size: 16px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+
+    /* Styling the search results */
+    .results {
+      margin-top: 30px;
+    }
+
+    .lawyer-card {
+      display: flex;
+      align-items: center;
+      background-color: #f9f9f9;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      height: auto;
+      flex-wrap: wrap;
+    }
+
+    .lawyer-profile {
+      width: 80px;
+      height: 80px;
+      background-color: #007BFF;
+      color: white;
+      font-size: 22px;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 8px;
+      margin-right: 20px;
+    }
+
+    .lawyer-details {
+      flex: 1;
+    }
+
+    /* Dropdown (Select Box) Styles */
+    #caseType {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background-color: white;
+      margin-bottom: 20px;
+      transition: border-color 0.3s ease;
+    }
+
+    #caseType:focus {
+      border-color: #007BFF;
+      outline: none;
+    }
+
+    #caseType option {
+      padding: 10px;
+      font-size: 16px;
+      background-color: white;
+      color: #333;
+    }
+
+    #caseType option:hover {
+      background-color: #f1f1f1;
+    }
+
+    /* Contact button style */
+    .contact-btn {
+      background-color: #28a745;
+      color: white;
+      padding: 10px;
+      font-size: 14px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    .contact-btn:hover {
+      background-color: #218838;
+    }
   </style>
 </head>
 <body>
 
-  <div class="container">
+  <div class="lawyer-container">
     <h1>Find a Lawyer</h1>
 
-    <!-- Search Bar -->
+    <!-- Case Type Form -->
     <div class="form-group">
-      <input type="text" id="searchInput" placeholder="Search lawyers by name or specialization..." />
+      <label for="caseType">Case Type:</label>
+      <select id="caseType">
+        <option value="civil">Civil</option>
+        <option value="criminal">Criminal</option>
+        <option value="family">Family</option>
+        <option value="property">Property</option>
+        <option value="contract">Contract</option>
+        <option value="narcotics">Narcotics</option>
+        <option value="cybercrime">Cybercrime</option>
+        <option value="tax">Tax</option>
+        <option value="corporate">Corporate</option>
+        <option value="gst">GST</option>
+        <option value="divorce">Divorce</option>
+        <option value="custody">Custody</option>
+        <option value="intellectual_property">Intellectual Property</option>
+        <option value="trademark">Trademark</option>
+        <option value="patent">Patent</option>
+        <option value="immigration">Immigration</option>
+        <option value="asylum">Asylum</option>
+        <option value="citizenship">Citizenship</option>
+        <option value="environmental">Environmental</option>
+        <option value="public_interest_litigation">Public Interest Litigation</option>
+        <option value="labour">Labour</option>
+        <option value="employment">Employment</option>
+        <option value="industrial_disputes">Industrial Disputes</option>
+        <option value="real_estate">Real Estate</option>
+        <option value="construction">Construction</option>
+        <option value="consumer">Consumer</option>
+        <option value="fraud">Fraud</option>
+        <option value="warranty">Warranty</option>
+      </select>
+      
     </div>
+    
+    <button id="submitBtn" class="btn-primary">Search Lawyers</button>
 
-    <!-- Case Details Form -->
-    <form id="caseForm">
-      <h2>Enter Case Details</h2>
-
-      <div class="form-group">
-        <label for="caseType">Case Type:</label>
-        <select id="caseType" required>
-          <option value="">Select</option>
-          <option value="Criminal">Criminal</option>
-          <option value="Civil">Civil</option>
-          <option value="Corporate">Corporate</option>
-          <option value="Family">Family</option>
-        </select>
-      </div>
-
-
-      <button type="submit" class="btn-primary">Search Lawyers</button>
-    </form>
-
-    <!-- Lawyer Results Section -->
+    <!-- Lawyer Results -->
     <div class="results" id="lawyerResults">
       <h2>Available Lawyers</h2>
-      <div class="lawyer-card" data-name="Anita Sharma" data-specialization="Criminal,Family">
-        <strong>Name:</strong> Anita Sharma<br/>
-        <strong>Stage:</strong> High Court<br/>
-        <strong>Specialization:</strong> Criminal, Family<br/>
-        <strong>Experience:</strong> 15 years (Senior)
-      </div><br/>
-      <div class="lawyer-card" data-name="Rohan Mehra" data-specialization="Corporate,Civil">
-        <strong>Name:</strong> Rohan Mehra<br/>
-        <strong>Stage:</strong> Supreme Court<br/>
-        <strong>Specialization:</strong> Corporate, Civil<br/>
-        <strong>Experience:</strong> 8 years (Mid-Level)
-      </div><br/>
-      <div class="lawyer-card" data-name="Sanya Jain" data-specialization="Family">
-        <strong>Name:</strong> Sanya Jain<br/>
-        <strong>Stage:</strong> District Court<br/>
-        <strong>Specialization:</strong> Family<br/>
-        <strong>Experience:</strong> 3 years (Junior)
-      </div>
+      <!-- Lawyers will be appended here -->
     </div>
   </div>
 
   <script>
-    const searchInput = document.getElementById('searchInput');
-    const lawyerCards = document.querySelectorAll('.lawyer-card');
+    async function fetchLawyers(caseType) {
+      if (!caseType) {
+        alert('Please select a case type');
+        return;
+      }
 
-    searchInput.addEventListener('input', function () {
-      const query = this.value.toLowerCase();
-      lawyerCards.forEach(card => {
-        const name = card.getAttribute('data-name').toLowerCase();
-        const specialization = card.getAttribute('data-specialization').toLowerCase();
-        card.style.display = name.includes(query) || specialization.includes(query) ? 'block' : 'none';
-      });
-    });
+      try {
+        const response = await fetch("http://localhost:5000/get_lawyers", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ case_type: caseType }),
+        });
 
-    // Case form filtering can be enhanced here
-    document.getElementById('caseForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      alert('Filtered based on dropdowns. (Connect to backend or logic here)');
+        const lawyers = await response.json();
+
+        const resultsContainer = document.getElementById("lawyerResults");
+        resultsContainer.innerHTML = "<h2>Available Lawyers</h2>";
+
+        if (!lawyers.matched_lawyers || lawyers.matched_lawyers.length === 0) {
+          resultsContainer.innerHTML += "<p>No lawyers found for this case type.</p>";
+          return;
+        }
+
+        lawyers.matched_lawyers.forEach((name) => {
+          const initials = name
+            .split("_")
+            .map((w) => w[0])
+            .join("")
+            .toUpperCase();
+
+          const card = ` 
+            <div class="lawyer-card">
+              <div class="lawyer-profile">${initials}</div>
+              <div class="lawyer-details">
+                <strong>Name:</strong> ${name.replace(/_/g, " ")}<br/>
+                <button class="contact-btn">Contact Now</button>
+              </div>
+            </div>`;
+          resultsContainer.innerHTML += card;
+        });
+      } catch (error) {
+        console.error("Error fetching lawyers:", error);
+        alert("Error fetching lawyers from backend.");
+      }
+    }
+
+    // Trigger on button click
+    document.getElementById("submitBtn").addEventListener("click", () => {
+      const caseType = document.getElementById("caseType").value;
+      fetchLawyers(caseType);
     });
   </script>
 

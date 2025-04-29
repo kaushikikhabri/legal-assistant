@@ -16,59 +16,73 @@ body {
     padding: 40px 20px;
 }
 
-/* Container */
-.container {
-    width: 900px;
-    max-width: 95%;
+/* Main Container */
+.lawyer-container {
+    width: 100%;
+    max-width: 900px;
     background: #ffffff;
     border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.1);
     padding: 30px;
+    overflow: hidden;
 }
 
-/* Headings */
-.container h1 {
+/* Heading Styling */
+.lawyer-container h1 {
     color: #007BFF;
-    font-size: 28px;
+    font-size: 32px;
     margin-bottom: 20px;
     text-align: center;
+    font-weight: bold;
 }
 
-.container h2 {
+.lawyer-container h2 {
     color: #333;
-    font-size: 22px;
-    margin-top: 30px;
+    font-size: 20px;
+    margin-top: 20px;
     margin-bottom: 15px;
+    font-weight: 500;
 }
 
 /* Form Group */
 .form-group {
     margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Input Elements */
+/* Label Styling */
+label {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+/* Input Styling */
 select {
     width: 100%;
-    padding: 12px 16px;
+    padding: 14px 18px;
+    font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 10px;
-    font-size: 16px;
     outline: none;
-    transition: border-color 0.3s ease;
-    background-color: #fff;
+    background-color: #f9f9f9;
+    color: #555;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 select:focus {
     border-color: #007BFF;
+    background-color: #ffffff;
 }
 
-/* Disabled Select */
 select:disabled {
     background-color: #f1f1f1;
-    color: #666;
+    color: #aaa;
 }
 
-/* Button */
+/* Button Styling */
 .btn-primary {
     background-color: #007BFF;
     color: white;
@@ -76,20 +90,30 @@ select:disabled {
     padding: 14px 28px;
     border-radius: 25px;
     font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s;
+    text-align: center;
+    display: inline-block;
 }
 
 .btn-primary:hover {
     background-color: #0056b3;
 }
 
-/* Results Section */
+.btn-primary:focus {
+    outline: none;
+}
+
+/* Results Section Styling */
 .results {
     background-color: #e0eaf6;
     padding: 20px;
     border-radius: 12px;
     margin-top: 30px;
+    white-space: pre-wrap;
+    font-size: 16px;
+    color: #333;
 }
 
 /* Message Bubbles */
@@ -101,10 +125,69 @@ select:disabled {
     font-size: 16px;
     line-height: 1.5;
     color: #333;
+    word-wrap: break-word;
 }
 
-/* Bot messages (lawyer listings) */
+/* Bot (lawyer listings) */
 .bot-message {
     background-color: #dce7f9;
     border-left: 4px solid #007BFF;
+}
+
+.bot-message strong {
+    color: #007BFF;
+}
+
+/* Centered Flexbox for the Form */
+.lawyer-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.lawyer-container form button {
+    margin-top: 20px;
+    align-self: center;
+}
+
+/* General Aesthetic Improvements */
+input[type="text"], select, textarea {
+    width: 100%;
+    padding: 14px 18px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+    color: #333;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus, select:focus, textarea:focus {
+    border-color: #007BFF;
+}
+
+/* Textarea Styling */
+textarea {
+    resize: vertical;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .lawyer-container {
+        width: 100%;
+        padding: 20px;
+    }
+    
+    .lawyer-container h1 {
+        font-size: 26px;
+    }
+
+    .lawyer-container h2 {
+        font-size: 18px;
+    }
+
+    .btn-primary {
+        width: 100%;
+    }
 }
